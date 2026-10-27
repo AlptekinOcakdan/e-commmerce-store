@@ -2,6 +2,14 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+### Standalone (demo data) vs. against the admin
+
+- **Standalone:** leave `NEXT_PUBLIC_API_URL` unset. The storefront uses the demo catalog in `lib/mock-data.ts` (categories, sizes, colors, products with Unsplash images); filters work, checkout shows a "demo mode" toast instead of calling Stripe.
+- **Against the admin** (`../e-commerce-admin`): run the admin, create a store and copy its id, then create `.env` here with
+  `NEXT_PUBLIC_API_URL=http://localhost:<adminPort>/api/<storeId>` and run this app on port 3001 (`npm run dev -- -p 3001`), which is the admin's default `FRONTEND_STORE_URL` (Stripe success/cancel redirects).
+  Note: the home page shows billboard id `7182f5b7-5a08-4314-a6e2-90d756f321a2` (hard-coded in `app/(routes)/page.tsx`); replace it with one of your billboard ids.
+
+
 First, run the development server:
 
 ```bash

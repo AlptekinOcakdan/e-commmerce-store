@@ -30,6 +30,11 @@ const Summary = () => {
     }, 0);
 
     const onCheckout = async () => {
+        if (!process.env.NEXT_PUBLIC_API_URL) {
+            toast.error('Checkout is disabled in demo mode. Set NEXT_PUBLIC_API_URL to the admin API to enable Stripe checkout.');
+            return;
+        }
+
         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, {
             productIds: items.map((item) => item.id)
         });

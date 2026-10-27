@@ -1,3 +1,4 @@
+import {notFound} from 'next/navigation';
 import Container from '@/components/ui/container';
 import Billboard from '@/components/ui/billboard';
 import ProductCard from '@/components/ui/product-card';
@@ -15,16 +16,18 @@ import React from "react";
 export const revalidate = 0;
 
 interface CategoryPageProps {
-    params: {
+    params: Promise<{
         categoryId: string;
-    },
-    searchParams: {
+    }>,
+    searchParams: Promise<{
         colorId: string;
         sizeId: string;
-    }
+    }>
 }
 
-const CategoryPage: React.FC<CategoryPageProps> = async ({params, searchParams}) => {
+const CategoryPage = async (props: CategoryPageProps) => {
+    const params = await props.params;
+    const searchParams = await props.searchParams;
     const products = await getProducts({
         categoryId: params.categoryId,
         colorId: searchParams.colorId,
@@ -33,6 +36,10 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({params, searchParams})
     const sizes = await getSizes();
     const colors = await getColors();
     const category = await getCategory(params.categoryId);
+
+    if (!category) {
+        notFound();
+    }
 
     return (
         <div className="bg-white">

@@ -1,3 +1,4 @@
+import {isMockMode, filterProducts} from "@/lib/mock-data";
 import {Product} from "@/types";
 import qs from "query-string";
 
@@ -11,6 +12,8 @@ interface Query {
 }
 
 const getProducts = async (query: Query): Promise<Product[]> => {
+    if (isMockMode) return filterProducts(query);
+
     const url = qs.stringifyUrl({
         url: URL,
         query: {

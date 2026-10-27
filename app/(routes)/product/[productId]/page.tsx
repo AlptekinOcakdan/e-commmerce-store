@@ -1,3 +1,4 @@
+import {notFound} from 'next/navigation';
 import ProductList from '@/components/product-list'
 import Gallery from '@/components/gallery';
 import Info from '@/components/info';
@@ -9,20 +10,22 @@ import React from "react";
 export const revalidate = 0;
 
 interface ProductPageProps {
-    params: {
+    params: Promise<{
         productId: string;
-    },
+    }>,
 }
 
-const ProductPage: React.FC<ProductPageProps> = async ({params}) => {
+const ProductPage = async (props: ProductPageProps) => {
+    const params = await props.params;
     const product = await getProduct(params.productId);
-    const suggestedProducts = await getProducts({
-        categoryId: product?.category?.id
-    });
 
     if (!product) {
-        return null;
+        notFound();
     }
+
+    const suggestedProducts = await getProducts({
+        categoryId: product.category?.id
+    });
 
     return (
         <div className="bg-white">
